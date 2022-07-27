@@ -1,0 +1,323 @@
+---
+name: Bahman Rostami-Tabar
+address: "Cardiff Business School,\\tabularnewline Cardiff University, Wales, Great Britain"
+www: bahmanrt.com
+phone: +44 29 2087 0723
+email: "rostami-tabarb@cardiff.ac.uk"
+twitter: Bahman_R_T
+github: bahmanrostamitabar
+linkedin: bahman-rostami-tabar-1046171a
+date: "`r format(Sys.Date(), '%B %Y')`"
+csl: numeric-apa-cv.csl
+output: vitae::hyndman
+header-includes:
+  \definecolor{headcolor}{HTML}{000000}
+---
+
+\newcounter{bib}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  cache = FALSE
+)
+library(tidyverse)
+library(RefManageR)
+library(vitae)
+source("functions.R")
+
+
+
+# Read any bib files
+pubs <- bibliography_entries("rjhpubs.bib")
+reports <- bibliography_entries("rjhreports.bib")
+packages <- bibliography_entries("Rpackages.bib")
+
+# Read grants file
+grants <- read_csv("Grant_income.csv")
+```
+
+# Education and qualifications
+
+```{r degrees, results='asis'}
+tribble(
+    ~Degree, ~Institution, ~Year,
+    "FHEA – Fellow of the Higher Education Academy", "Higher Education Academy", 2017,
+        "Post Graduate Certificate of Higher Education", "Coventry University", 2016,
+        "Ph.D. in Industrial Engineering", "University of Bordeaux, France", 2014,
+        "M.Sc. in Information Systems", "ECE Paris , France", 2010,
+        "M.Sc. in Industrial Engineering", "Tarbiat Modares University, Iran", 2008,
+        "B.Sc.(Hons) in Industrial Engineering", "K.N.Toosi University of Technology, Iran", 2004
+  ) %>%
+  baretable()
+```
+
+# Fellowships
+
+  * Public Value Fellow, Cardiff Business School, 2020.
+  * Associate Fellow of NHS-R community, 2021.
+  
+# Employment history
+
+```{r employment, results='asis'}
+tribble(
+    ~Start, ~End, ~Position,
+    2014, 2015, "\\textbf{Post-doc}, Industrial Engineering Lab, Ecole Central-Supelec, Paris, France",
+    2015, 2016, "\\textbf{Lecturer}, School of strategy and Leadership, Coventry University, Coventry, UK",
+    2016, 2019, "\\textbf{Lecturer}, Cardiff Business School, Cardiff University, Cardiff, UK",
+    2019, 2021, "\\textbf{Senior Lecturer}, Cardiff Business School, Cardiff University, Cardiff, UK",
+    2021, NA, "\\textbf{Reader (Associate Professor)}, Cardiff Business School, Cardiff University, Cardiff, UK",
+  ) %>%
+  arrange(-Start) %>%
+  mutate(End = replace_na(End, "")) %>%
+  mutate(Years = if_else(End == Start,
+        as.character(Start),
+        paste(Start, "--", End, sep = ""),
+        paste(Start, "--", End, sep = ""))) %>%
+  select(Years, Position) %>%
+  baretable()
+```
+
+# Academic and leadership roles
+
+  * **Director**, Logistics and Systems Dynamics Research Group, Cardiff Business School 2021-- Present.
+  * Member, Shadow Management Board, Cardiff Business School 2020--2021.
+
+# Awards and honours
+
+```{r awards, results='asis'}
+tribble(
+    ~Year, ~Award,
+    2021, "Leaders Innovation and Engagemen, Cardiff Business School",
+    2018, "Excellence in International Activities, Cardiff University",
+    2020, "Innovation in Teaching and Learning award, Cardiff Business School",
+        2020, "Scholarship for the Mini-Certificate in Real World Risk, Real World Risk Institute",
+    2017, "Best Paper Award, Industrial Engineering and Operations Management Society, International Symposium",
+    2017, "Nomination for Enriching Student Life, Cardiff University",
+    2013, "Best Paper Award, IFAC, Manufacturing Modelling, Management and Control conference."
+  ) %>%
+  filter(!grepl("HP Innovation", Award)) %>%
+  arrange(Year) %>%
+  baretable()
+```
+  
+# Society leadership
+
+  * **Founder** and chair, [Forecasting for Social Good (F4SG)-IIF](https://www.f4sg.org/), [International Institute of Forecasters](https://forecasters.org/programs/communities/forecasting-for-social-good-f4sg/), 2020 -- Present.
+  
+  * Program Committee Board, Wales Modelling Collaborative , NHS Wales, 2019 -- Present.
+
+# Society memberships
+
+  * Member, International Institute of Forecasters
+  * Member, OR Society
+  * Member, Division of Population Medicine 
+  * Member, Clinical Innovation MDT
+  * Member, South Wales Operational Research Discussion Society
+  
+# Advisory boards
+
+  * Scientific adviser, Intelligent Forecasting Competition,  United States Agency for International Development (USAID), 2021 -- Present.
+  * Scientific and Cultural Committee, Kurdish Institute of Paris,  2021 -- Present.
+
+
+\newpage
+
+# Grants
+
+```{r grants}
+sumgrants <- grants %>%
+  pull(Amount) %>%
+  c(100000) %>%
+  sum(na.rm=TRUE)
+```
+
+I have acquired (in most cases jointly) $`r sprintf("%2.1f", sumgrants/1e6)` million in research & engagement grants since 2018. 
+
+<br><br>
+
+```{r grantstable, results='asis'}
+grants %>%
+  mutate(
+    Time = paste0(Start, ifelse(is.na(End),"",paste0("--",End))),
+    Entry = paste(People, ". ``", Title, "''. ",
+                  "\\emph{Funding from ", Source,"}",
+                  sep=""),
+    Amount = dollars(Amount)
+  ) %>%
+  arrange(Time, desc(Amount)) %>%
+  select(Time, Entry, Amount) %>%
+  baretable(align='llp{13.3cm}r',
+            hline.after=c(0,NROW(.)),
+            size="\\fontsize{10}{16}",
+            add.to.row=list(
+              pos=as.list(seq(NROW(.))),
+              command=rep("\\\\[-0.2cm]",NROW(.))))
+```
+
+# Research
+
+  * I have authored `r NROW(pubs)` papers, chapters or books on forecasting, analytics and supply chain topics (listed in the following sections ).
+  * My research interests includes forecasting, predictive modeling, business analytics, statistical and machine learning, and their links to policy, decision making and planning.  
+  * My current research involves forecasting and analysis of large collections of data in various areas including  vaccine distribution, supply chains of medical items, supply chain of contraceptive products, patient flow in emergency departements, trauma network and ambulance services and demand of inpatiend and community mental health services.
+  * I have been working with various national and international organisations including the International Committee of the Red Cross (ICRC), United States Agency for International Development (USAID), National Health Service (NHS) UK, Welsh Ambulance Service Trust (WAST), John Snow, Inc (JSI) and DSV: Global Transport and Logistics.
+  * I currently supervise five PhD students. I have previously supervised an additional 15 Master students with industry projects.
+
+# Ph.D. Supervision
+
+  * Zihao Wang, 2020 - 2023, Lead supervisor, *Patient flow forecasting/modelling numbers in Major Trauma Network (MTN) Wales*, in collaboration with Major Trauma Network Wales.
+  
+  * Venessa Wells, 2020 - 2025, Third supervisor, *Valuing Value: how evaluative judgements are perceived, understood, and practised by multiple actors - people in not-for-profit leadership positions and information providers*.
+    
+  * Mingzhi Shi, 2021 - 2024, Lead supervisor, *Improving the unscheduled planning in urgent and emergency care: Using predictive modeling to deliver quality care*, in collaboration with Welsh Ambulance Service Trust.
+  
+  * Ruikai Sun, 2021 - 2024, Lead supervisor , *Forecast and optimization of container port carbon emission based on combined models*.
+  
+  * Harsha Charma, 2022 - 2026, Lead supervisor, *Forecasting improvements for better reproductive health and family planning operations in global health supply chains*, in collaboration with United States Agency for International Development.
+
+# PhD thesis
+
+\refstepcounter{bib}\label{papersstart}
+
+```{r thesis}
+pubs %>%
+  filter(type == "thesis")
+```
+
+# Books
+
+```{r books}
+pubs %>%
+  filter(type == "book") %>%
+  arrange(issued, author$family)
+```
+
+# Refereed research papers
+
+```{r research-papers}
+# Normal articles excluding editorials
+pubs %>%
+  filter(type == "article-journal") %>%
+  arrange(issued)
+```
+
+# Book chapters
+
+```{r book-chapters}
+pubs %>%
+  filter(type %in% c("chapter")) %>%
+  arrange(issued, author$family)
+```
+
+# Papers in refereed conference proceedings
+
+```{r papers-in-proceedings}
+pubs %>%
+  filter(type == "paper-conference") %>%
+  arrange(issued, author$family)
+```
+
+# Working papers (submitted)
+
+```{r working-papers}
+pubs %>%
+  filter(type %in% c("report", "manuscript") | is.na(type)) %>%
+  arrange(issued, author$family)
+```
+
+# Conference presentations
+
+  * *Forecasting for social good*, 2^nd^ Biennial International Workshop and Conference on Economic and Social Goods, Online, June 2021.
+  * *Forecasting for social good*, International Symposium on Forecasting, online, Online, June 2021.
+  * *The effect of data characteristics on the effectiveness of temporal aggregation*, 16-19 June 2019, International Symposium on Forecasting, Thessaloniki, Greece.
+  * *Anticipating the impact of special events on the Emergency Department forecasting*, 16-19 June 2019, ISF, Thessaloniki, Greece.
+  * *Overlapping vs. non-overlapping temporal aggregation*, 22-25 June 2017, Cairns, Australia.
+  * *Using Data Envelopment Analysis for ranking forecasting approaches*, 06-10 Sep. 2016, Havana, Cuba.
+  * *Overlapping vs. non-overlapping temporal aggregation*, 06-09 May 2016, Orlando FL, USA.
+  * *On the performance of temporal demand aggregation when optimal forecasting is used*, IIF Workshop on Supply Chain Forecasting for Operations, 28-29 June 2016, Lancaster University, UK.
+  * *Sales Forecasting Models: An Application to the Automobile Sector*, OR56, 9-11 Sep 2014, London, UK.
+  * *Demand Forecasting by Cross-Sectional Aggregation*, 26th European Conference on Operation Research (Euro-Informs MMXIII), 1-4 July 2013, Rome, Italy.
+  * *Demand Forecasting by Temporal Aggregation, IFAC Conference on Manufacturing Modeling*, Management and Control (MIM), 19-21 June 2013, Saint Petersburg, Russia.
+  *The Impact of Temporal Aggregation on Demand Forecasting*, 17th International Working Seminar on Production Economics, 20-24 February 2012, Innsbruck, Austria.
+
+# Invited talks and seminars
+
+  * Invited seminar, Centre for Marketing Analytics and Forecasting, Lancaster University, UK, February 2022, *On performance of temporal aggregation in time series forecasting*.
+  * Invited seminar, Kedge Business School, France, December 2021, *Demand forecasting in supply chains- aggregation and hierarchical approaches*.
+  * Invited seminar, NHS Wales Modelling Collaborative, Online, June 2021, *Value of forecasting in healthcare planning* 
+
+# Workshop delivery  
+
+***Since January 2018, I have delivered 16 workshops in 9 countries and trained over 500 people on time series forecasting***.
+
+1. Instructor, *Data analytics & forecasting in R*,  Salahaddin University, Iraq, August 2017.
+2. Instructor, *Data analytics & forecasting in R*, Ecole Nationale des Sciences et Technologies Avancées de Borj Cédria, Tunisia, January 2018.
+3. Instructor, *Data analytics & forecasting in R*, Dakar Ecole de Management, Senegal, May 2018.
+4. Instructor, *Data analytics & forecasting in R*, Charmo University, Iraq, October 2018.
+5. Instructor, *Data analytics & forecasting in R*, University of Ankara, Turkey, January 2019.
+6. Instructor, *Data analytics & forecasting in R*, Institute of Human Virology, Nigeria, April 2019.
+7. Instructor, *Data analytics & forecasting in R*, Makerere University Business School , Uganda, April 2019.
+8. Instructor, *Time series forecasting in R*, Binus University , Indonesia, August 2019.
+9. Instructor, *Time series forecasting in R*, Caucasus University , Georgia, December 2019.
+10. Workshop leader, *Time series forecasting in R*, NHS-R community, UK, February 2020.
+11. Workshop leader, *Time series forecasting in R*, NHS-R community, UK, June 2020.
+12. Workshop leader, *Time series forecasting in R*, NHS-R community, UK, October 2020.
+13. Instructor, *Time series forecasting in R*, NHS Midlands and Lancashire Commissioning Support Unit UK, June 2021.
+14. Instructor, *Time series forecasting in R*, NHS Midlands and Lancashire Commissioning Support Unit UK, November 2021.
+15. Instructor, *Time series forecasting in R*, NHS Midlands and Lancashire Commissioning Support Unit UK, February 2022.
+16. Workshop leader, *Forecasting with Multiple Seasonality*, NHS-R community, UK, November 2020.
+
+# Teaching
+
+  * In every year since 2018, student evaluations for "Business Data Analytics" and  "Forecasting" have given an average rating for my teaching above 4.47 out of 5.
+  * In 2017, I received highly commended in the "Innovation in teaching and learning" award from Cardiff Business School.
+
+  ***MS.c. in Logistics and Operations Management, Cardiff University***
+  
+  * *Forecasting*: Forecasting & decision making, Time series graphics, Exponential Smoothing, ARIMA, Regression, Residual diagnostics, accuracy evaluation
+  * *Business Data Analytics*: Data wrangling, visualisation, transformation & communication
+  
+  ***Executive Education, Diploma in Planning, National Health Service, Cardiff University***
+  
+  * *Healthcare Planning Evidence and Analytics*: Data collection, Explanatory Data Analysis, transformation, visualisation, predictive modeling, Regression, Correlation, Artificial Intelligence and Machine Learning, Barriers & Enablers of model implementation
+
+  ***MS.c. in ISLI Global Supply Chain Management, Kedge Business School, France***
+  
+  * *Inventory Management*: Supply chain and inventory management, Inventory management concepts, inventory control policy, Economic Order Quantity, Inventory Management Under Uncertain Environment
+
+  ***MS.c. in Business Analytics, University of Exeter***
+  
+  * *Data Visualisation in R*: Tidy data, data transformation, data visualisation, ggplot2
+
+# Conference organization
+
+  * Organising Committee, Forecasting for Social Good workshop, 2022.
+  * Program Committee, Social media analysis for humanitarian and development challenges, GoodIT, 2022.
+  * Organising Committee, Forecasting for Social Good workshop, 2021.
+  * Program committee, UseR!2021 conference, 2021.
+  * Invited session, International Symposium of Forecasting, 2019.
+  * Organising Committee, Forecasting for Social Good workshop, 2018.
+  * Forecasting stream organiser, OR59 Annual Conference, 2017.
+  * Invites Session, International Symposium of Forecasting, 2017.
+  * Forecasting stream organiser, OR58 Annual Conference, 2016.
+  * Invites Session, INCOM2015, 2015.
+
+# Special issue editorships
+
+  * Forecasting for Social Good, International Journal of Forecasting, 2021-2022, with Michael Porter and Zied Babai.
+  * Forecasting for Social Good, International Journal of Forecasting, 2019-2020, with Michael Porter and Tao Hong.
+
+# Reviewing assignments
+
+I have provide review service for many peer reviewed journal including: Computers & Operations Research, European Journal of Operational Research, IMA Journal of Management Mathematics, International Journal of Forecasting, International Journal of Production Economics,  International Journal of Production Research, Journal of the Operations Research Society, 
+OMEGA: International Journal of Management Science, Production and Operations Management, Supply Chain Management: An International Journal, Networks and Spatial Economics,  Journal of Humanitarian Logistics and Supply Chain Management, Health Systems.
+
+# Research evaluations
+
+  * The Austrian Science Fund, Austria, 2021 - 2022
+
+# External Academic Appointments
+
+  * University of Exceter, UK, 2021-- Present, External examiner for the M.Sc. in Business Analytics.

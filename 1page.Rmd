@@ -1,0 +1,153 @@
+---
+name: Rob J Hyndman
+address: "Department of Econometrics & Business Statistics,\\tabularnewline Monash University, VIC 3800, Australia."
+www: robjhyndman.com
+phone: +61 3 9905 5141
+email: "Rob.Hyndman@monash.edu"
+twitter: robjhyndman
+github: robjhyndman
+date: "`r format(Sys.time(), '%B %Y')`"
+headcolor: "000088"
+csl: numeric-apa-cv.csl
+output:
+  vitae::hyndman:
+    keep_tex: yes
+header-includes:
+  - \geometry{left=1.8cm,right=1.8cm,top=1.9cm,bottom=1.4cm}
+  - \usepackage{graphicx}
+  - \graphicspath{{~}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache = FALSE)
+library(tidyverse)
+library(RefManageR)
+library(vitae)
+source("functions.R")
+```
+
+
+
+```{r Rpackages, eval=FALSE}
+# Construct bib file for R packages
+source("Rpackages.R")
+write_packages_bib(
+  pkglist = c(
+    "addb",
+    "anomalous",
+    "bfast",
+    "binb",
+    "compenginets",
+    "cricketdata",
+    "demography",
+    "eechidna",
+    "emma",
+    "expsmooth",
+    "fable",
+    "fabletools",
+    "feasts",
+    "fds",
+    "fma",
+    "forecast",
+    "fpp",
+    "fpp2",
+    "fpp3",
+    "ftsa",
+    "gratis",
+    "gravitas",
+    "hdrcde",
+    "hts",
+    "Mcomp",
+    "MEFM",
+    "MonashEBSTemplates",
+    "oddstream",
+    "oddwater",
+    "ozbabynames",
+    #"ozdata",
+    "rainbow",
+    "rmarkdown",
+    "robets",
+    "seer",
+    "smoothAPC",
+    "stR",
+    "stray",
+    "sugrrants",
+    "thief",
+    "tscompdata",
+    "tsdl",
+    "tsfeatures",
+    "tsibble",
+    "tsibbledata",
+    "vitae"),
+  file="Rpackages.bib")
+```
+
+```{r bibfiles}
+# Read any bib files
+pubs <- ReadBib("rjhpubs.bib", check = FALSE)
+reports <- ReadBib("rjhreports.bib", check = FALSE)
+packages <- ReadBib("Rpackages.bib", check = FALSE)
+```
+
+# Education and qualifications
+
+```{r degrees, results='asis'}
+tribble(
+  ~Year, ~Degree, ~Institution,
+  1988, "B.Sc.(Hons)", "University of Melbourne",
+  1992, "Ph.D.", "University of Melbourne",
+  2000, "A.Stat.", "Statistical Society of Australia"
+) %>%
+  baretable()
+```
+
+# Current positions
+
+```{r employment, results='asis'}
+tribble(
+  ~Start, ~End, ~Position,
+  2003, NA, "\\textbf{Professor}, Department of Econometrics \\& Business Statistics, Monash University",
+  2019, NA, "\\textbf{Head}, Department of Econometrics \\& Business Statistics, Monash University",
+) %>%
+  arrange(-Start) %>%
+  mutate(End = replace_na(End, "")) %>%
+  mutate(Years = paste(Start, "--", End, sep = "")) %>%
+  select(Years, Position) %>%
+  baretable()
+```
+
+```{r publist}
+# Find editorials
+editorials <- c(
+  "hyndman2015new",
+  "hyndman2015change",
+  "IJFeditorial13",
+  "tourismeditorial11",
+  "IJFeditorial10b",
+  "IJFeditorial10a",
+  "IJFeditorial06",
+  "IJFeditorial05"
+)
+```
+
+\newcommand{\bibfont}{\normalfont\fontsize{10}{11.7}\sffamily}
+
+
+# Books (since 2018)
+
+```{r books}
+bibliography_entries("rjhpubs.bib") %>%
+  filter(type == "book", issued > 2015) %>%
+  arrange(issued, author$family)
+```
+
+# Research papers (since 2018)
+
+```{r research-papers}
+# Normal articles excluding editorials
+bibliography_entries("rjhpubs.bib") %>%
+  filter(type == "article-journal", !(id %in% editorials), issued >= 2018) %>%
+  arrange(issued, author$family)
+```
+
+\thispagestyle{empty}\vspace*{-.31cm}\hspace*{14.5cm}\includegraphics[width=4cm]{Sig}\vspace*{-2cm}
